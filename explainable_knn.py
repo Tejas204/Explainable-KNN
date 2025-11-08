@@ -12,7 +12,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Define hyperparameters
 k = 5
-batch_size = 4
+batch_size = 1
 
 # Data load
 transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
@@ -29,17 +29,34 @@ samples, labels = next(example)
 print(samples.shape, labels.shape)
 
 
-fig, axs = plt.subplots(2, 2)
-axs = axs.flatten()
-for i in range(batch_size):
-    axs[i].imshow(samples[i].permute(1, 2, 0))
-plt.show()
+# fig, axs = plt.subplots(2, 2)
+# axs = axs.flatten()
+# for i in range(batch_size):
+#     axs[i].imshow(samples[i].permute(1, 2, 0))
+# plt.show()
 
 
 # Model
+class KNN():
+    def __init__(self):
+        super(KNN, self).__init__()
+        self.neighbours = k
+        self.batch_size = batch_size
+        self.neighbour_array = {}
 
+    def display_explanation():
+        pass
 
-# Training loop
+    def compute_knn(self, query):
+        # For all images in the train loader
+        # Compute distance
+
+        # Add top k to the dictionary
+
+        # Display as a grid
+        print(f"Query: {query}")
 
 
 # Testing
+model = KNN()
+model.compute_knn(query="Hey there")
