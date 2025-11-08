@@ -29,6 +29,12 @@ samples, labels = next(example)
 print(samples.shape, labels.shape)
 
 
+fig, axs = plt.subplots(2, 2)
+axs = axs.flatten()
+for i in range(batch_size):
+    axs[i].imshow(samples[i].permute(1, 2, 0))
+plt.show()
+
 
 # Model
 
