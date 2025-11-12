@@ -6,6 +6,7 @@ import torchvision
 import torchvision.transforms as transforms
 import numpy as np
 import matplotlib.pyplot as plt
+from collections import Counter
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -85,14 +86,19 @@ class KNN():
     def compute_knn(self, query):
         # For all images in the train loader, compute distance
         for index in range(len(train_loader)):
-            image, label = train_loader[index]
+            image, _ = train_loader[index]
             self.distances.update({self.compute_euclidean_distance(image, query): index})
 
         self.distances = dict(sorted(self.distances.items(), key=lambda item:item[0]))
         self.neighbours = {key: value for i, (key, value) 
                            in enumerate(self.distances.items()) if i < k}
         
-        query_label = ""
+        top_k_labels = list(self.neighbours.values())
+        top_k_labels_frequency = Counter(top_k_labels)
+        majority_label = top_k_labels_frequency.most_common(1)
+        query_label = majority_label[0][0]
+        
+        
 
         self.display_explanation(query, query_label)
 
