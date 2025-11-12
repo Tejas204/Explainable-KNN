@@ -42,19 +42,41 @@ class KNN():
         super(KNN, self).__init__()
         self.neighbours = k
         self.batch_size = batch_size
-        self.neighbour_array = {}
+        self.neighbours = {}
+        self.explanations = {}
+        self.distances = {}
 
-    def display_explanation():
-        pass
+    def display_explanation(self, query):
+        for key in self.neighbours:
+            explanation, label = train_loader[self.neighbours[key]]
+            self.explanations.update({label, explanation})
+
+        fig, axs = plt.subplots(2, 3)
+        axs = axs.flatten()
+        for i in range(len(self.explanations)+1):
+            if i == 0:
+                axs[i].imshow(query.permute(1, 2, 0))
+            axs[i].imshow(self.explanations[i].permute(1, 2, 0))
+            axs[i].set_title(list(self.explanations.keys())[i])
+        plt.show()
+        
+
+    def compute_euclidean_distance(self, image, query):
+        image = image.numpy()
+        query = query.numpy()
+        euclidean_distance = np.sum(np.sum(np.square(image - query)))
+        return euclidean_distance
 
     def compute_knn(self, query):
-        # For all images in the train loader
-        # Compute distance
+        # For all images in the train loader, compute distance
+        for index in range(len(train_loader)):
+            image, label = train_loader[index]
+            self.distances.update({self.compute_euclidean_distance(image, query): index})
 
-        # Add top k to the dictionary
+        self.distances = dict(sorted(self.distances.items(), key=lambda item:item[0]))
+        self.neighbours = {key: value for i, (key, value) in enumerate(self.distances.items()) if i < k}
 
-        # Display as a grid
-        print(f"Query: {query}")
+        self.display_explanation(query)
 
 
 # Testing
