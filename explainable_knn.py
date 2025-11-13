@@ -54,8 +54,9 @@ class KNN():
     # ---------------------------------------------------------------------------------------------------------
     def display_explanation(self, query, query_label):
         for key in self.neighbours:
-            explanation, label = train_loader[self.neighbours[key]]
-            self.explanations.update({label, explanation})
+            explanation, label = train_dataset[self.neighbours[key]]
+            print(f"explanation, label: {explanation}")
+            self.explanations.update({label: explanation})
 
         fig, axs = plt.subplots(2, 3)
         axs = axs.flatten()
@@ -85,16 +86,20 @@ class KNN():
     # ---------------------------------------------------------------------------------------------------------
     def compute_knn(self, query):
         # For all images in the train loader, compute distance
-        for index in range(len(train_loader)):
-            image, _ = train_loader[index]
+        for index in range(10):
+            image, _ = train_dataset[index]
             self.distances.update({self.compute_euclidean_distance(image, query): index})
 
         self.distances = dict(sorted(self.distances.items(), key=lambda item:item[0]))
+        print(f"Distances: {self.distances}\n")
+
         self.neighbours = {key: value for i, (key, value) 
                            in enumerate(self.distances.items()) if i < k}
+        print(f"Neighbours: {self.neighbours}\n")
         
         top_k_labels = list(self.neighbours.values())
         top_k_labels_frequency = Counter(top_k_labels)
+        print(f"top k labels: {top_k_labels_frequency}\n")
         majority_label = top_k_labels_frequency.most_common(1)
         query_label = majority_label[0][0]
         
@@ -105,4 +110,4 @@ class KNN():
 
 # Testing
 model = KNN()
-model.compute_knn(query="Hey there")
+model.compute_knn(query=test_dataset[0][0])
