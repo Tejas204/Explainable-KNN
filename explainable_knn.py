@@ -53,19 +53,22 @@ class KNN():
     # @Desc: Display the explanations in a 2*3 grid with labels
     # ---------------------------------------------------------------------------------------------------------
     def display_explanation(self, query, query_label):
+        
+
         for key in self.neighbours:
             explanation, label = train_dataset[self.neighbours[key]]
-            print(f"explanation, label: {explanation}")
             self.explanations.update({label: explanation})
 
-        fig, axs = plt.subplots(2, 3)
+        explanation_keys = list(self.explanations.keys())
+        print(f"explanation keys: {explanation_keys}, length: {len(explanation_keys)}")
+
+        fig, axs = plt.subplots(2, 3, figsize=(8, 4))
         axs = axs.flatten()
-        for i in range(len(self.explanations)+1):
-            if i == 0:
-                axs[i].imshow(query.permute(1, 2, 0))
-                axs[i].imshow(query.permute(1, 2, 0))
-            axs[i].imshow(self.explanations[i].permute(1, 2, 0))
-            axs[i].set_title(list(self.explanations.keys())[i])
+        axs[0].imshow(query.permute(1, 2, 0))
+        axs[0].set_title("Query: " + str(query_label))
+        for i in range(len(explanation_keys)):
+            axs[i].imshow(self.explanations[explanation_keys[i]].permute(1, 2, 0))
+            axs[i].set_title(explanation_keys[i])
         plt.show()
         
     # ---------------------------------------------------------------------------------------------------------
