@@ -27,7 +27,6 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch
 # Visualization
 example = iter(train_loader)
 samples, labels = next(example)
-print(samples.shape, labels.shape)
 
 
 # fig, axs = plt.subplots(2, 2)
@@ -53,22 +52,20 @@ class KNN():
     # @Desc: Display the explanations in a 2*3 grid with labels
     # ---------------------------------------------------------------------------------------------------------
     def display_explanation(self, query, query_label):
-        
+        self.explanations.update({query: query_label})
 
         for key in self.neighbours:
             explanation, label = train_dataset[self.neighbours[key]]
-            self.explanations.update({label: explanation})
-
-        explanation_keys = list(self.explanations.keys())
-        print(f"explanation keys: {explanation_keys}, length: {len(explanation_keys)}")
+            self.explanations.update({explanation: label})
 
         fig, axs = plt.subplots(2, 3, figsize=(8, 4))
         axs = axs.flatten()
-        axs[0].imshow(query.permute(1, 2, 0))
-        axs[0].set_title("Query: " + str(query_label))
-        for i in range(len(explanation_keys)):
-            axs[i].imshow(self.explanations[explanation_keys[i]].permute(1, 2, 0))
-            axs[i].set_title(explanation_keys[i])
+        for i, (explanation, label) in enumerate(self.explanations.items()):
+            axs[i].imshow(explanation.permute(1, 2, 0))
+            if i == 0:
+                axs[i].set_title("Query: " + str(label))
+            else:
+                axs[i].set_title(label)
         plt.show()
         
     # ---------------------------------------------------------------------------------------------------------
@@ -88,29 +85,36 @@ class KNN():
     # @Desc: Compute euclidean distance, sort the top k neighbours and compute majority vote, display results
     # ---------------------------------------------------------------------------------------------------------
     def compute_knn(self, query):
-        # For all images in the train loader, compute distance
-        for index in range(10):
+        # For all images in the train dataset, compute distance, store as distance: image index
+        for index in range(len(train_dataset)):
             image, _ = train_dataset[index]
             self.distances.update({self.compute_euclidean_distance(image, query): index})
 
+        
+        # Sort the dictionary in ascending
         self.distances = dict(sorted(self.distances.items(), key=lambda item:item[0]))
-        print(f"Distances: {self.distances}\n")
+        # print(f"self.distances: {self.distances}\n")
 
+        # Compute the top k shorted distances and the indices of those images
         self.neighbours = {key: value for i, (key, value) 
                            in enumerate(self.distances.items()) if i < k}
-        print(f"Neighbours: {self.neighbours}\n")
+        # print(f"self.neighbours: {self.neighbours}\n")
         
-        top_k_labels = list(self.neighbours.values())
+
+        # Compute labels of top-k labels
+        neighbour_indices = list(list(self.neighbours.values()))
+        top_k_labels = []
+        for i in range(len(neighbour_indices)):
+            top_k_labels.append(train_dataset[i][1])
+
+        # Conduct majority vote and give label to the query
         top_k_labels_frequency = Counter(top_k_labels)
-        print(f"top k labels: {top_k_labels_frequency}\n")
         majority_label = top_k_labels_frequency.most_common(1)
         query_label = majority_label[0][0]
-        
-        
 
         self.display_explanation(query, query_label)
 
 
 # Testing
 model = KNN()
-model.compute_knn(query=test_dataset[0][0])
+model.compute_knn(query=test_dataset[2][0])
