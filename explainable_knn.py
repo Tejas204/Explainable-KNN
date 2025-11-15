@@ -93,12 +93,14 @@ class KNN():
         # Compute labels of top-k labels
         neighbour_indices = list(list(self.neighbours.values()))
         top_k_labels = []
-        for i in range(len(neighbour_indices)):
+        for i in neighbour_indices:
             top_k_labels.append(train_dataset[i][1])
 
         # Conduct majority vote and give label to the query
         top_k_labels_frequency = Counter(top_k_labels)
+        print(f"top_k_labels_frequency: {top_k_labels_frequency}")
         majority_label = top_k_labels_frequency.most_common(1)
+        print(f"majority_label: {majority_label}")
         query_label = majority_label[0][0]
 
         self.display_explanation(query, query_label)
