@@ -82,12 +82,10 @@ class KNN():
         
         # Sort the dictionary in ascending
         self.distances = dict(sorted(self.distances.items(), key=lambda item:item[0]))
-        # print(f"self.distances: {self.distances}\n")
 
         # Compute the top k shorted distances and the indices of those images
         self.neighbours = {key: value for i, (key, value) 
                            in enumerate(self.distances.items()) if i < k}
-        # print(f"self.neighbours: {self.neighbours}\n")
         
 
         # Compute labels of top-k labels
@@ -98,11 +96,10 @@ class KNN():
 
         # Conduct majority vote and give label to the query
         top_k_labels_frequency = Counter(top_k_labels)
-        print(f"top_k_labels_frequency: {top_k_labels_frequency}")
         majority_label = top_k_labels_frequency.most_common(1)
-        print(f"majority_label: {majority_label}")
         query_label = majority_label[0][0]
 
+        # Display explanations
         self.display_explanation(query, query_label)
 
 
