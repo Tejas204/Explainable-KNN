@@ -12,11 +12,11 @@ from collections import Counter
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Define hyperparameters
-k = 5
+k = 11
 batch_size = 1
 
-# Data load
-transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+# Data loaders and datasets
+transform = transforms.Compose([transforms.ToTensor()])
 
 train_dataset = torchvision.datasets.CIFAR10(root='data', train=True, transform=transform, download=True)
 test_dataset = torchvision.datasets.CIFAR10(root='data', train=False, transform=transform, download=True)
@@ -47,7 +47,7 @@ class KNN():
             explanation, label = train_dataset[self.neighbours[key]]
             self.explanations.update({explanation: label})
 
-        fig, axs = plt.subplots(2, 3, figsize=(8, 4))
+        fig, axs = plt.subplots(2, 6, figsize=(8, 4))
         axs = axs.flatten()
         for i, (explanation, label) in enumerate(self.explanations.items()):
             axs[i].imshow(explanation.permute(1, 2, 0))
