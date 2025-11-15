@@ -34,6 +34,7 @@ class KNN():
         self.neighbours = {}
         self.explanations = {}
         self.distances = {}
+        self.class_dictionary = {0: "Airplane", 1: "Automobile", 2: "Bird", 3: "Cat", 4: "Deer", 5: "Dog", 6: "Frog", 7: "Horse", 8: "Ship", 9: "Truck"}
 
     # ---------------------------------------------------------------------------------------------------------
     # @Function: display_explanation
@@ -52,9 +53,9 @@ class KNN():
         for i, (explanation, label) in enumerate(self.explanations.items()):
             axs[i].imshow(explanation.permute(1, 2, 0))
             if i == 0:
-                axs[i].set_title("Query: " + str(label))
+                axs[i].set_title("Predicted Label:\n" + self.class_dictionary[label])
             else:
-                axs[i].set_title(label)
+                axs[i].set_title(self.class_dictionary[label])
         plt.show()
         
     # ---------------------------------------------------------------------------------------------------------
@@ -105,4 +106,4 @@ class KNN():
 
 # Testing
 model = KNN()
-model.compute_knn(query=test_dataset[2][0])
+model.compute_knn(query=test_dataset[98][0])
