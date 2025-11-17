@@ -73,6 +73,7 @@ class KNN():
     # ---------------------------------------------------------------------------------------------------------
     # @Function: compute_error_rate
     # @Args: predicted_labels, original_labels (array-like)
+    # @Returns: error_rate (float)
     # @Desc: Compute euclidean distance between the query and the image
     # ---------------------------------------------------------------------------------------------------------
     def compute_error_rate(self, predicted_labels, original_labels):
@@ -88,8 +89,6 @@ class KNN():
         accuracy = error_count/n_samples
         error_rate = 1 - accuracy
         return error_rate
-
-
 
     # ---------------------------------------------------------------------------------------------------------
     # @Function: compute_knn
