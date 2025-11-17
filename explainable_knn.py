@@ -27,7 +27,7 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch
 
 # Model
 class KNN():
-    def __init__(self):
+    def __init__(self, k, batch_size):
         super(KNN, self).__init__()
         self.neighbours = k
         self.batch_size = batch_size
@@ -129,5 +129,20 @@ class KNN():
 
 
 # Testing
-model = KNN()
-model.compute_knn(query=test_dataset[98][0])
+
+
+# Selecting optimal K
+range_of_K = 10
+
+for k_value in range(range_of_K):
+    predicted_labels = []
+    error_rates = []
+    model = KNN(k=k_value, batch_size=batch_size)
+    for i in range(len(test_dataset)):
+        prediction = model.compute_knn(query=test_dataset[i][0])
+        predicted_labels.append(prediction)
+
+    error = model.compute_error_rate(predicted_labels, test_dataset[:][1])
+    error_rates.append(error)
+
+    # Visualize
