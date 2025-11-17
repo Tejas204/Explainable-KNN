@@ -61,6 +61,7 @@ class KNN():
     # ---------------------------------------------------------------------------------------------------------
     # @Function: compute_euclidean_distance
     # @Args: image, query
+    # @Returns: euclidean distance (float)
     # @Desc: Compute euclidean distance between the query and the image
     # ---------------------------------------------------------------------------------------------------------
     def compute_euclidean_distance(self, image, query):
@@ -68,9 +69,31 @@ class KNN():
         query = query.numpy()
         euclidean_distance = np.sum(np.sum(np.square(image - query)))
         return euclidean_distance
+    
+    # ---------------------------------------------------------------------------------------------------------
+    # @Function: compute_error_rate
+    # @Args: predicted_labels, original_labels (array-like)
+    # @Desc: Compute euclidean distance between the query and the image
+    # ---------------------------------------------------------------------------------------------------------
+    def compute_error_rate(self, predicted_labels, original_labels):
+        error_count = 0
+        n_samples = len(predicted_labels)
+        if len(predicted_labels) == len(original_labels):
+            for i in range(len(predicted_labels)):
+                if predicted_labels[i] != original_labels[i]:
+                    error_count += 1
+                else:
+                    continue
+
+        accuracy = error_count/n_samples
+        error_rate = 1 - accuracy
+        return error_rate
+
+
 
     # ---------------------------------------------------------------------------------------------------------
     # @Function: compute_knn
+    # @Returns: query_label
     # @Args: query
     # @Desc: Compute euclidean distance, sort the top k neighbours and compute majority vote, display results
     # ---------------------------------------------------------------------------------------------------------
@@ -102,6 +125,8 @@ class KNN():
 
         # Display explanations
         self.display_explanation(query, query_label)
+
+        return query_label
 
 
 # Testing
