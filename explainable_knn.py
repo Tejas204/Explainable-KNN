@@ -134,7 +134,7 @@ class KNN():
 # Selecting optimal K
 range_of_K = 10
 
-for k_value in range(range_of_K):
+for k_value in range(1, range_of_K+1):
     predicted_labels = []
     error_rates = []
     model = KNN(k=k_value, batch_size=batch_size)
@@ -145,4 +145,9 @@ for k_value in range(range_of_K):
     error = model.compute_error_rate(predicted_labels, test_dataset[:][1])
     error_rates.append(error)
 
-    # Visualize
+# Visualize
+plt.plot([value+1 for value in range(range_of_K)], error_rates)
+plt.xlabel("K-values")
+plt.ylabel("Error rates")
+plt.title("K-values vs Error rate")
+plt.show()
