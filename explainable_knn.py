@@ -12,7 +12,7 @@ from collections import Counter
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Define hyperparameters
-k = 11
+# k = 11
 batch_size = 1
 
 # Data loaders and datasets
@@ -29,7 +29,7 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch
 class KNN():
     def __init__(self, k, batch_size):
         super(KNN, self).__init__()
-        self.neighbours = k
+        self.k = k
         self.batch_size = batch_size
         self.neighbours = {}
         self.explanations = {}
@@ -48,7 +48,7 @@ class KNN():
             explanation, label = train_dataset[self.neighbours[key]]
             self.explanations.update({explanation: label})
 
-        fig, axs = plt.subplots(2, 6, figsize=(8, 4))
+        fig, axs = plt.subplots(1, self.k, figsize=(8, 4))
         axs = axs.flatten()
         for i, (explanation, label) in enumerate(self.explanations.items()):
             axs[i].imshow(explanation.permute(1, 2, 0))
@@ -108,7 +108,7 @@ class KNN():
 
         # Compute the top k shorted distances and the indices of those images
         self.neighbours = {key: value for i, (key, value) 
-                           in enumerate(self.distances.items()) if i < k}
+                           in enumerate(self.distances.items()) if i < self.k}
         
 
         # Compute labels of top-k labels
@@ -123,7 +123,7 @@ class KNN():
         query_label = majority_label[0][0]
 
         # Display explanations
-        self.display_explanation(query, query_label)
+        # self.display_explanation(query, query_label)
 
         return query_label
 
@@ -135,14 +135,16 @@ class KNN():
 range_of_K = 10
 
 for k_value in range(1, range_of_K+1):
+    print(f"Computing for k: {k_value}")
     predicted_labels = []
     error_rates = []
     model = KNN(k=k_value, batch_size=batch_size)
-    for i in range(len(test_dataset)):
+    for i in range(10):
         prediction = model.compute_knn(query=test_dataset[i][0])
         predicted_labels.append(prediction)
 
     error = model.compute_error_rate(predicted_labels, test_dataset[:][1])
+    print(f"Error for k = {k_value} is: {error}\n")
     error_rates.append(error)
 
 # Visualize
