@@ -1,0 +1,11 @@
+Error for k = 1 is: 0.19999999999999996
+Error for k = 1 is: 0.19999999999999996
+Error for k = 2 is: 0.19999999999999996
+Error for k = 3 is: 0.30000000000000004
+Error for k = 4 is: 0.30000000000000004
+Error for k = 5 is: 0.30000000000000004
+Error for k = 6 is: 0.30000000000000004
+Error for k = 7 is: 0.30000000000000004
+Error for k = 8 is: 0.4
+Error for k = 9 is: 0.4
+Error for k = 10 is: 0.30000000000000004

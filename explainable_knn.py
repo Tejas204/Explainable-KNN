@@ -134,6 +134,9 @@ class KNN():
 # Selecting optimal K
 range_of_K = 10
 
+# Write output to the file
+
+
 for k_value in range(1, range_of_K+1):
     print(f"Computing for k: {k_value}")
     predicted_labels = []
@@ -148,7 +151,10 @@ for k_value in range(1, range_of_K+1):
 
     error = model.compute_error_rate(predicted_labels, actual_labels)
     print(f"Error for k = {k_value} is: {error}\n")
+    with open("outputs.txt", "a") as f:
+        f.write(f"Error for k = {k_value} is: {error}\n")
     error_rates.append(error)
+
 
 # Visualize
 plt.plot([value+1 for value in range(range_of_K)], error_rates)
